@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TrustLens · Multimedia Authentication &amp; Verification</title>
+<style>
+:root{--bg:#F7F3EA;--card:#fff;--ink:#12302F;--mut:#5B6F6D;--line:#E3DCCB;--teal:#0E6B63;--amb:#F2A33A;--cor:#E4572E;--grn:#2E9E6B;--mint:#DCEFEA;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1F1E;--card:#12302F;--ink:#EAF3F1;--mut:#9DB8B4;--line:#23504C;--mint:#16403C}}
+:root[data-theme="dark"]{--bg:#0B1F1E;--card:#12302F;--ink:#EAF3F1;--mut:#9DB8B4;--line:#23504C;--mint:#16403C}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+header svg{flex:none}h1{font-size:24px;margin:0;line-height:1.1}
+.sub{color:var(--mut);margin:2px 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;border-top:4px solid var(--teal)}
+.card.a{border-top-color:var(--amb)}.card.c{border-top-color:var(--cor)}
+h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px;color:var(--mut)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:26px 12px;text-align:center;cursor:pointer;color:var(--mut);transition:.15s}
+.drop:hover,.drop.on{border-color:var(--teal);background:var(--mint);color:var(--ink)}
+input[type=text]{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;margin-bottom:10px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:7px 12px}
+button:hover{border-color:var(--teal)}button.p{background:var(--teal);color:#fff;border-color:var(--teal)}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.badge{display:inline-block;padding:5px 14px;border-radius:99px;color:#fff;font-weight:700;letter-spacing:.06em;font-size:13px}
+.top{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.big{font-size:44px;font-weight:800;line-height:1}
+.meters{display:grid;gap:8px;margin:14px 0}.m{display:grid;grid-template-columns:96px 1fr 40px;gap:10px;align-items:center;font-size:13px}
+.bar{height:9px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%}
+ul{list-style:none;padding:0;margin:0}li.f{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.ic{flex:none;width:22px;height:22px;border-radius:50%;color:#fff;text-align:center;font-weight:700;font-size:13px;line-height:22px}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;word-break:break-all;color:var(--mut)}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line);white-space:nowrap}th{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.note{font-size:12.5px;color:var(--mut);margin-top:10px}.err{color:var(--cor);font-weight:600}
+</style></head><body><div class="wrap">
+<header><svg width="40" height="46" viewBox="0 0 40 46"><path d="M20 1l17 6v13c0 12-8 21-17 25C11 41 3 32 3 20V7z" fill="#0E6B63"/><path d="M12 23l6 6 11-13" fill="none" stroke="#F2A33A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div><h1>TrustLens</h1></div></header>
+<p class="sub">Multimedia Authentication &amp; Verification Platform · everything runs in your browser, your files never leave your device.</p>
+
+<div class="grid">
+ <div class="card"><h2>1 · Register an original</h2>
+  <input type="text" id="owner" placeholder="Owner / creator name" value="Student">
+  <div class="drop" id="d1">Drop an image, WAV or MP4 here<br><small>or click to choose</small></div>
+  <input type="file" id="f1" hidden>
+  <div id="regmsg" class="note"></div></div>
+ <div class="card a"><h2>2 · Verify a file</h2>
+  <div class="drop" id="d2">Drop the file you want to check<br><small>or click to choose</small></div>
+  <input type="file" id="f2" hidden>
+  <p class="note">Hash match proves it’s the registered original. Otherwise TrustLens looks for the original it was made from and checks metadata, error levels and audio/video structure.</p></div>
+ <div class="card c"><h2>Try it in 10 seconds</h2>
+  <p class="note" style="margin-top:0">Generates sample photos in your browser, no files needed.</p>
+  <div class="row"><button class="p" id="s0">① Register sample photo</button></div>
+  <div class="row"><button id="s1">Verify untouched copy</button><button id="s2">Verify edited copy</button><button id="s3">Verify re-saved copy</button><button id="s4">Verify stranger’s photo</button></div></div>
+</div>
+
+<div class="card" id="res" style="display:none"></div>
+
+<div class="card" style="margin-top:16px"><h2>Registry (signed with HMAC-SHA256)</h2>
+ <div class="scroll" id="regtbl"></div>
+ <div class="row"><button id="tamp">Simulate database tampering</button><button id="clr">Clear registry</button></div>
+ <p class="note">Each record is signed with a secret key kept in this browser. If anyone edits a record, its signature fails. Verdicts are indicators from heuristics (ELA, hashes, metadata), not legal proof.</p></div>
+</div>
+<script>
+const $=i=>document.getElementById(i),enc=new TextEncoder(),CH=65536;
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const sha=async b=>hex(await crypto.subtle.digest('SHA-256',b));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mem={},store={get(k){try{return localStorage.getItem(k)}catch(e){return mem[k]??null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}};
+let KEY=store.get('tl.key');if(!KEY){KEY=hex(crypto.getRandomValues(new Uint8Array(24)));store.set('tl.key',KEY)}
+let reg=[];try{reg=JSON.parse(store.get('tl.reg')||'[]')}catch(e){}
+const save=()=>store.set('tl.reg',JSON.stringify(reg));
+async function sig(r){const{sig:_,...d}=r;const k=await crypto.subtle.importKey('raw',enc.encode(KEY),{name:'HMAC',hash:'SHA-256'},false,['sign']);return hex(await crypto.subtle.sign('HMAC',k,enc.encode(JSON.stringify(d))))}
+async function chunks(buf){const o=[];for(let i=0;i<buf.byteLength;i+=CH)o.push((await sha(buf.slice(i,i+CH))).slice(0,16));return o}
+const overlap=(n,o)=>{const t=Math.max(n.length,o.length)||1;let c=0;for(let i=0;i<t;i++)if(i>=n.length||i>=o.length||n[i]!==o[i])c++;return[1-c/t,c]};
+function sniff(u){const s=(a,o=0)=>a.every((v,i)=>u[o+i]===v);if(s([255,216,255]))return'jpeg';if(s([137,80,78,71]))return'png';if(s([82,73,70,70])&&s([87,65,86,69],8))return'wav';if(s([102,116,121,112],4))return'mp4';return'unknown'}
+const EXT={jpg:['image','jpeg'],jpeg:['image','jpeg'],png:['image','png'],wav:['audio','wav'],mp4:['video','mp4'],m4v:['video','mp4'],mov:['video','mp4']};
+/* ---------- JPEG / EXIF / quality ---------- */
+const ZZ=[0,1,8,16,9,2,3,10,17,24,32,25,18,11,4,5,12,19,26,33,40,48,41,34,27,20,13,6,7,14,21,28,35,42,49,56,57,50,43,36,29,22,15,23,30,37,44,51,58,59,52,45,38,31,39,46,53,60,61,54,47,55,62,63];
+const STD=[16,11,10,16,24,40,51,61,12,12,14,19,26,58,60,55,14,13,16,24,40,57,69,56,14,17,22,29,51,87,80,62,18,22,37,56,68,109,103,77,24,35,55,64,81,104,113,92,49,64,78,87,103,121,120,101,72,92,95,98,112,100,103,99];
+function qual(qt){const nat=[];qt.forEach((v,k)=>nat[ZZ[k]]=v);let b=90,bd=1e9;for(let q=1;q<=100;q++){const s=q<50?5000/q:200-2*q;const d=STD.reduce((a,v,i)=>a+Math.abs(Math.min(255,Math.max(1,Math.floor((v*s+50)/100)))-nat[i]),0);if(d<bd){bd=d;b=q}}return b}
+function exif(u,t){const dv=new DataView(u.buffer,u.byteOffset),le=u[t]==73,g16=o=>dv.getUint16(o,le),g32=o=>dv.getUint32(o,le);const p=t+g32(t+4),n=g16(p),r={};for(let k=0;k<n;k++){const e=p+2+k*12,tag=g16(e);if([0x10f,0x110,0x131].includes(tag)){const c=g32(e+4),o=c>4?t+g32(e+8):e+8;r[tag]=String.fromCharCode(...u.slice(o,o+c-1))}}return r}
+function jpeg(u){const dv=new DataView(u.buffer,u.byteOffset),o={q:90};let i=2;while(i<u.length-4){if(u[i]!=255){i++;continue}const m=u[i+1],len=dv.getUint16(i+2);if(m==0xE1&&u[i+4]==69&&u[i+5]==120){try{const x=exif(u,i+10);o.exif=1;o.mk=x[0x10f];o.md=x[0x110];o.sw=x[0x131]}catch(e){}}if(m==0xDB&&!o.dq){o.dq=1;o.q=qual([...u.slice(i+5,i+69)])}if(m==0xDA)break;i+=2+len}return o}
+/* ---------- image: hashes + ELA ---------- */
+const cv=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};
+function gray(b,w,h){const c=cv(w,h),x=c.getContext('2d',{willReadFrequently:true});x.drawImage(b,0,0,w,h);const d=x.getImageData(0,0,w,h).data,g=[];for(let i=0;i<d.length;i+=4)g.push(.299*d[i]+.587*d[i+1]+.114*d[i+2]);return g}
+function hashes(b){const a=gray(b,8,8),av=a.reduce((s,v)=>s+v,0)/64,d=gray(b,9,8);let ah='',dh='';a.forEach(v=>ah+=v>av?1:0);for(let r=0;r<8;r++)for(let c=0;c<8;c++)dh+=d[r*9+c]>d[r*9+c+1]?1:0;return{ah,dh}}
+const ham=(a,b)=>[...a].reduce((s,c,i)=>s+(c!==b[i]),0);
+const simImg=(f,o)=>o.ah?Math.max(0,((1-(ham(f.ah,o.ah)+ham(f.dh,o.dh))/128)-.5)/.5):0;
+async function ela(b,q){const w=b.width,h=b.height,c=cv(w,h),x=c.getContext('2d',{willReadFrequently:true});x.drawImage(b,0,0);const a=x.getImageData(0,0,w,h).data;
+ const b2=await createImageBitmap(await new Promise(r=>c.toBlob(r,'image/jpeg',q/100)));x.clearRect(0,0,w,h);x.drawImage(b2,0,0);const d=x.getImageData(0,0,w,h).data;
+ const bw=w>>3,bh=h>>3,cells=[];for(let gy=0;gy<8;gy++)for(let gx=0;gx<8;gx++){let s=0;for(let y=gy*bh;y<(gy+1)*bh;y++)for(let xx=gx*bw;xx<(gx+1)*bw;xx++){const i=(y*w+xx)*4;s+=Math.abs(a[i]-d[i])+Math.abs(a[i+1]-d[i+1])+Math.abs(a[i+2]-d[i+2])}cells.push(s/(bw*bh*3))}
+ const med=[...cells].sort((p,q)=>p-q)[32];return{hot:cells.map((v,i)=>v>3*med+.5?i:-1).filter(i=>i>=0),bw,bh}}
+/* ---------- audio / video ---------- */
+function wav(u){const dv=new DataView(u.buffer,u.byteOffset,u.byteLength);let p=12,f,d;while(p+8<=u.length){const id=String.fromCharCode(...u.slice(p,p+4)),n=dv.getUint32(p+4,true);if(id=='fmt ')f={ch:dv.getUint16(p+10,true),rate:dv.getUint32(p+12,true),bits:dv.getUint16(p+22,true)};if(id=='data'){d=[p+8,Math.min(n,u.length-p-8)];break}p+=8+n+(n&1)}
+ if(!f||!d||f.bits!=16)throw Error('Only 16-bit PCM WAV is supported');const N=Math.floor(d[1]/2/f.ch),s=new Float32Array(N);for(let i=0;i<N;i++)s[i]=dv.getInt16(d[0]+i*2*f.ch,true)/32768;
+ const seg=Math.floor(N/32),prof=[];for(let k=0;k<32;k++){let a=0;for(let i=k*seg;i<(k+1)*seg;i++)a+=s[i]*s[i];prof.push(+Math.sqrt(a/seg).toFixed(5))}
+ const win=Math.floor(f.rate/100);let run=0,best=0;for(let i=0;i+win<=N;i+=win){let z=1;for(let j=0;j<win;j++)if(s[i+j]!==0){z=0;break}run=z?run+1:0;best=Math.max(best,run)}
+ return{rate:f.rate,ch:f.ch,dur:+(N/f.rate).toFixed(3),prof,sil:best/100}}
+function mp4(u){const dv=new DataView(u.buffer,u.byteOffset,u.byteLength),boxes=[];let p=0,e=null;while(p+8<=u.length){let n=dv.getUint32(p);const t=String.fromCharCode(...u.slice(p+4,p+8));if(n==1)n=Number(dv.getBigUint64(p+8));if(n==0)n=u.length-p;if(n<8)break;boxes.push(t);if(t=='moov'){const s=new TextDecoder('latin1').decode(u.slice(p,Math.min(p+n,p+2e6)));for(const m of['Lavf','Lavc','HandBrake','Premiere'])if(s.includes(m)){e=m;break}}p+=n}return{boxes,enc:e}}
+/* ---------- analyse a file ---------- */
+async function analyze(file){const buf=await file.arrayBuffer(),u=new Uint8Array(buf),ext=file.name.split('.').pop().toLowerCase();
+ if(!EXT[ext])throw Error('Unsupported type ‘.'+ext+'’. Use JPG, PNG, WAV or MP4.');
+ const[type,exp]=EXT[ext],real=sniff(u),a={name:file.name,type,exp,real,fmtOk:real===exp,size:file.size,sha:await sha(buf),chunks:await chunks(buf),meta:{},fp:{}};
+ if(type==='image'){a.bmp=await createImageBitmap(file);a.meta=real==='jpeg'?jpeg(u):{};a.meta.w=a.bmp.width;a.meta.h=a.bmp.height;a.fp=hashes(a.bmp)}
+ else if(type==='audio'){const w=wav(u);a.meta={rate:w.rate,ch:w.ch,dur:w.dur};a.fp={prof:w.prof};a.sil=w.sil}
+ else{a.meta=mp4(u)}
+ return a}
+function sim(a,r){if(a.type==='image')return simImg(a.fp,r.fp);if(a.type==='audio'){const x=a.fp.prof,y=r.fp.prof||[];if(x.length!=y.length)return 0;const s=1-x.reduce((t,v,i)=>t+Math.abs(v-y[i]),0)/(x.reduce((t,v)=>t+v,0)+y.reduce((t,v)=>t+v,0)+1e-9);return Math.max(0,s*Math.min(a.meta.dur,r.meta.dur)/Math.max(a.meta.dur,r.meta.dur))}return 0}
+async function inspect(a,rec,F){let ms=100,ts=100;const add=(s,c,d)=>F.push([s,c,d]),m=a.meta,o=rec?rec.meta:null;
+ if(a.type==='image'){
+  if(/photoshop|gimp|lightroom|snapseed|canva|pixlr|affinity|picsart|facetune/i.test(m.sw||'')){ms-=40;add('fail','Editing software',`EXIF Software tag says ‘${m.sw}’`)}else if(m.exif)add('pass','Editing software','No photo-editor signature in metadata');
+  if(a.real==='jpeg'&&!m.exif){ms-=15;add('warn','Camera metadata','JPEG has no EXIF (stripped or exported)')}
+  if(o){if(o.w!==m.w||o.h!==m.h){ms-=25;add('fail','Dimensions',`${o.w}×${o.h} → ${m.w}×${m.h}`)}if(m.exif&&(o.mk!==m.mk||o.md!==m.md)){ms-=20;add('fail','Camera model','Camera make/model differs from the original')}}
+  if(a.real==='jpeg'){const e=await ela(a.bmp,m.q);if(!e.hot.length)add('pass','Error Level Analysis',`Compression error is uniform (estimated JPEG quality ${m.q})`);else{ts=Math.max(10,100-18*e.hot.length);const i=e.hot[0];add(e.hot.length>1?'fail':'warn','Error Level Analysis',`${e.hot.length} block(s) with abnormal compression error, e.g. near x=${(i%8)*e.bw}, y=${(i>>3)*e.bh} (possible paste/clone)`)}}else{ts=null;add('info','Error Level Analysis','Skipped: PNG is lossless')}}
+ else if(a.type==='audio'){
+  if(a.sil>=.25){ts=80;add('warn','Digital silence',`${a.sil.toFixed(2)}s of exact zeros (muted or cut region)`)}else add('pass','Digital silence','No suspicious muted regions');
+  if(o){if(o.rate!==m.rate){ms-=25;add('fail','Sample rate',`${o.rate} → ${m.rate}`)}if(o.ch!==m.ch){ms-=25;add('fail','Channels',`${o.ch} → ${m.ch}`)}if(Math.abs(o.dur-m.dur)>.05){ms-=20;add('fail','Duration',`${o.dur}s → ${m.dur}s`)}
+   const x=a.fp.prof,y=rec.fp.prof||[],ch=x.map((v,i)=>Math.abs(v-y[i])>.1*Math.max(v,y[i])+.002?i:-1).filter(i=>i>=0),sl=m.dur/32;
+   if(ch.length){ts=Math.max(0,ts-Math.round(250*ch.length/32));add('fail','Loudness profile',`${ch.length}/32 slices differ, between ${(ch[0]*sl).toFixed(1)}s and ${((ch.at(-1)+1)*sl).toFixed(1)}s`)}else add('pass','Loudness profile','Matches the registered original')}}
+ else{ts=null;const miss=['ftyp','moov','mdat'].filter(b=>!m.boxes.includes(b));
+  if(miss.length){ms-=30;add('fail','Container structure','Missing MP4 box(es): '+miss.join(', '))}else add('pass','Container structure','ftyp / moov / mdat present');
+  if(m.enc){ms-=25;add('warn','Encoder trace',`File was (re)written by ${m.enc}`)}else add('pass','Encoder trace','No re-encoding tool signature found');
+  if(o&&JSON.stringify(o.boxes)!==JSON.stringify(m.boxes)){ms-=15;add('fail','Box layout','Container layout differs from the original')}}
+ return{ms:Math.max(0,ms),ts}}
+async function verify(file){const t0=performance.now(),a=await analyze(file),F=[];let pen=0;
+ F.push(a.fmtOk?['pass','File signature','Content really is '+a.real.toUpperCase()]:(pen=30,['fail','File signature',`Extension says ${a.exp.toUpperCase()} but content is ${a.real.toUpperCase()} (spoofed or mislabelled)`]));
+ const out=(v,o,i,m,t,mt)=>({a,F,v,o,i,m,t,mt,ms:Math.round(performance.now()-t0)}),ex=reg.find(r=>r.sha===a.sha);
+ if(ex){F.push(['pass','SHA-256',`Matches registry record #${ex.id} (${ex.name})`]);if(await sig(ex)===ex.sig){F.push(['pass','Registry signature','Record HMAC is valid']);return out('AUTHENTIC',100-pen,100,100-pen,100,ex.name)}
+  F.push(['fail','Registry signature','Record HMAC is INVALID, the registry itself may have been altered']);return out('SUSPICIOUS',40,100,100,100,ex.name)}
+ let rec=null,bs=0,chg=0;for(const r of reg.filter(r=>r.type===a.type)){const[ov,c]=overlap(a.chunks,r.chunks);let s=Math.max(sim(a,r),ov);if(r.name===a.name)s=Math.max(s,.45);if(s>bs){bs=s;rec=r;chg=c}}
+ if(bs<.45)rec=null;const an=await inspect(a,rec,F),ms=Math.max(0,an.ms-pen);
+ if(!rec){F.push(['info','Registry lookup','No registered original found. Authenticity cannot be proven, only indicators are shown.']);const p=[[ms,.4]];if(an.ts!=null)p.push([an.ts,.6]);return out('UNREGISTERED',Math.round(p.reduce((s,[v,w])=>s+v*w,0)/p.reduce((s,[,w])=>s+w,0)),null,ms,an.ts,null)}
+ F.push(['fail','SHA-256',`Differs from registered original ‘${rec.name}’`]);if(await sig(rec)!==rec.sig)F.push(['fail','Registry signature','Original’s registry record is INVALID']);
+ const[ov]=overlap(a.chunks,rec.chunks),n=Math.max(a.chunks.length,rec.chunks.length);
+ if(ov>0)F.push(['fail','Segment hashes',`${chg}/${n} segments of 64 KB differ`]);else F.push(['warn','Segment hashes','No identical segments: file was re-encoded or re-saved']);
+ const integ=Math.round(100*Math.min(1,Math.max(bs,ov))),ts=an.ts!=null?an.ts:(ov>=1?100:Math.max(30,Math.round(100-150*(1-ov)))),o=Math.round(.4*integ+.25*ms+.35*ts);
+ return out(o>=80?'SUSPICIOUS':'TAMPERED',o,integ,ms,ts,rec.name)}
+/* ---------- UI ---------- */
+const COL={AUTHENTIC:'var(--grn)',SUSPICIOUS:'var(--amb)',TAMPERED:'var(--cor)',UNREGISTERED:'#6B7F9E'},IC={pass:['✓','var(--grn)'],warn:['!','var(--amb)'],fail:['✕','var(--cor)'],info:['i','#6B7F9E']};
+const MSG={AUTHENTIC:'Byte-for-byte identical to a signed registry record.',SUSPICIOUS:'Derived from a registered file but the bytes differ (re-saved, or registry signature problem).',TAMPERED:'Strong signs of editing compared with the registered original.',UNREGISTERED:'No trusted original on file. Showing indicator scores only.'};
+const meter=(l,v)=>`<div class="m"><span>${l}</span><div class="bar"><i style="width:${v??0}%;background:${v==null?'transparent':v>=80?'var(--grn)':v>=55?'var(--amb)':'var(--cor)'}"></i></div><b>${v==null?'n/a':v}</b></div>`;
+function show(r){const e=$('res');e.style.display='';e.style.borderTopColor=COL[r.v];
+ e.innerHTML=`<h2>Verification report · ${esc(r.a.name)}</h2><div class="top"><span class="badge" style="background:${COL[r.v]}">${r.v}</span><span class="big">${r.o}<small style="font-size:15px;color:var(--mut)"> / 100${r.v=='UNREGISTERED'?' indicator':''}</small></span></div><p class="note">${MSG[r.v]}</p>
+ <div class="meters">${meter('Integrity',r.i)}${meter('Metadata',r.m)}${meter('Tamper check',r.t)}</div>
+ <ul>${r.F.map(([s,c,d])=>`<li class="f"><span class="ic" style="background:${IC[s][1]}">${IC[s][0]}</span><div><b>${esc(c)}</b><br><span style="color:var(--mut)">${esc(d)}</span></div></li>`).join('')}</ul>
+ <p class="mono">SHA-256 ${r.a.sha}</p><p class="note">${(r.a.size/1024).toFixed(1)} KB · ${r.a.type} · checked in ${r.ms} ms${r.mt?' · compared with ‘'+esc(r.mt)+'’':''}</p>`;e.scrollIntoView({behavior:'smooth',block:'start'})}
+async function renderReg(){let h='<table><tr><th>#</th><th>File</th><th>Type</th><th>Owner</th><th>SHA-256</th><th>Signature</th><th>Registered</th><th></th></tr>';
+ for(const r of reg){const ok=await sig(r)===r.sig;h+=`<tr><td>${r.id}</td><td>${esc(r.name)}</td><td>${r.type}</td><td>${esc(r.owner)}</td><td class="mono">${r.sha.slice(0,14)}…</td><td style="color:${ok?'var(--grn)':'var(--cor)'};font-weight:700">${ok?'✓ valid':'✕ INVALID'}</td><td>${r.at.slice(0,16).replace('T',' ')}</td><td><button data-d="${r.id}">Remove</button></td></tr>`}
+ $('regtbl').innerHTML=reg.length?h+'</table>':'<p class="note">No records yet. Register an original above.</p>';
+ document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{reg=reg.filter(r=>r.id!=b.dataset.d);save();renderReg()})}
+async function register(file){const m=$('regmsg');m.className='note';m.textContent='Hashing…';
+ try{const a=await analyze(file);if(!a.fmtOk)throw Error(`Extension says ${a.exp} but content is ${a.real}. Refusing to register a mislabelled file.`);if(reg.some(r=>r.sha===a.sha))throw Error('This exact file is already registered.');
+  const r={id:Math.max(0,...reg.map(x=>x.id))+1,name:a.name,type:a.type,sha:a.sha,size:a.size,owner:$('owner').value||'unknown',at:new Date().toISOString(),meta:a.meta,fp:a.fp,chunks:a.chunks};r.sig=await sig(r);reg.push(r);save();await renderReg();m.textContent=`Registered ‘${a.name}’ as record #${r.id}. SHA-256 ${a.sha.slice(0,16)}…`}
+ catch(e){m.className='note err';m.textContent=e.message}}
+const run=async f=>{try{show(await verify(f))}catch(e){const r=$('res');r.style.display='';r.innerHTML='<p class="err">'+esc(e.message)+'</p>'}};
+function wire(d,i,fn){const inp=$(i),z=$(d);z.onclick=()=>inp.click();inp.onchange=()=>{if(inp.files[0])fn(inp.files[0]);inp.value=''};z.ondragover=e=>{e.preventDefault();z.classList.add('on')};z.ondragleave=()=>z.classList.remove('on');z.ondrop=e=>{e.preventDefault();z.classList.remove('on');if(e.dataTransfer.files[0])fn(e.dataTransfer.files[0])}}
+wire('d1','f1',register);wire('d2','f2',run);
+/* ---------- demo media (generated in-browser) ---------- */
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function photo(seed){const R=rng(seed),c=cv(640,480),x=c.getContext('2d'),g=x.createLinearGradient(0,0,0,480);g.addColorStop(0,`hsl(${R()*360},45%,45%)`);g.addColorStop(1,`hsl(${R()*360},50%,35%)`);x.fillStyle=g;x.fillRect(0,0,640,480);
+ for(let i=0;i<26;i++){x.fillStyle=`hsl(${R()*360},55%,${25+R()*50}%)`;x.beginPath();if(R()<.6)x.arc(R()*640,R()*480,15+R()*55,0,7);else x.rect(R()*640,R()*480,30+R()*90,30+R()*90);x.fill()}
+ const im=x.getImageData(0,0,640,480),d=im.data;for(let i=0;i<d.length;i+=4){const n=(R()-.5)*34;d[i]+=n;d[i+1]+=n;d[i+2]+=n}x.putImageData(im,0,0);return c}
+const jf=async(c,q,n)=>new File([await new Promise(r=>c.toBlob(r,'image/jpeg',q))],n,{type:'image/jpeg'});
+let demo=null;async function samples(){if(demo)return demo;const o=await jf(photo(1),.92,'photo_01.jpg'),ob=await createImageBitmap(o);
+ let c=cv(640,480),x=c.getContext('2d');x.drawImage(ob,0,0);x.drawImage(await createImageBitmap(await jf(photo(2),.6,'p.jpg')),100,100,160,90,360,270,160,90);x.fillStyle='#d21e1e';x.fillRect(380,200,110,32);x.fillStyle='#fff';x.font='bold 15px sans-serif';x.fillText('SOLD OUT',392,222);
+ const ed=await jf(c,.9,'photo_01.jpg');c=cv(640,480);c.getContext('2d').drawImage(ob,0,0);
+ return demo={o,ed,rs:await jf(c,.7,'photo_01_whatsapp.jpg'),st:await jf(photo(77),.92,'street.jpg')}}
+$('s0').onclick=async()=>{const s=await samples();await register(s.o)};
+[['s1','o'],['s2','ed'],['s3','rs'],['s4','st']].forEach(([b,k])=>$(b).onclick=async()=>run((await samples())[k]));
+$('tamp').onclick=async()=>{if(reg[0]){reg[0].sha='00'+reg[0].sha.slice(2);save();renderReg()}};
+$('clr').onclick=()=>{reg=[];save();renderReg();$('regmsg').textContent=''};
+renderReg();
+</script></body></html>
